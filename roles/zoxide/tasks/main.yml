@@ -1,0 +1,18 @@
+---
+- name: "Zoxide | Define distribution mapping"
+  ansible.builtin.set_fact:
+    distribution_mapping:
+      Archlinux: "arch"
+
+- name: "Zoxide | Determine task file"
+  ansible.builtin.set_fact:
+    task_file: "{{ distribution_mapping[ansible_distribution] | default(ansible_distribution) }}.yml"
+
+- name: "Zoxide | Checking for Distribution Config: {{ task_file }}"
+  ansible.builtin.stat:
+    path: "{{ role_path }}/tasks/{{ task_file }}"
+  register: zoxide_distribution_config
+
+- name: "Zoxide | Run Tasks: {{ task_file }}"
+  ansible.builtin.include_tasks: "{{ task_file }}"
+  when: zoxide_distribution_config.stat.exists

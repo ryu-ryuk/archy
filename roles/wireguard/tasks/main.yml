@@ -1,0 +1,18 @@
+---
+- name: "Wireguard | Define distribution mapping"
+  ansible.builtin.set_fact:
+    distribution_mapping:
+      Archlinux: "arch"
+
+- name: "Wireguard | Determine task file"
+  ansible.builtin.set_fact:
+    task_file: "{{ distribution_mapping[ansible_distribution] | default(ansible_distribution) }}.yml"
+
+- name: "Wireguard | Checking for Distribution Config: {{ ansible_distribution }}"
+  ansible.builtin.stat:
+    path: "{{ role_path }}/tasks/{{ ansible_distribution }}.yml"
+  register: wireguard_distribution_config
+
+- name: "Wireguard | Run Tasks: {{ ansible_distribution }}"
+  ansible.builtin.include_tasks: "{{ ansible_distribution }}.yml"
+  when: wireguard_distribution_config.stat.exists

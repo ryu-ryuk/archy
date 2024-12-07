@@ -1,0 +1,19 @@
+---
+---
+- name: "{{ role_name }} | Define distribution mapping"
+  ansible.builtin.set_fact:
+    distribution_mapping:
+      Archlinux: "arch"
+
+- name: "{{ role_name }} | Determine task file"
+  ansible.builtin.set_fact:
+    task_file: "{{ distribution_mapping[ansible_distribution] | default(ansible_distribution) }}.yml"
+
+- name: "Tmate | Checking for Distribution Config: {{ ansible_distribution }}"
+  ansible.builtin.stat:
+    path: "{{ role_path }}/tasks/{{ ansible_distribution }}.yml"
+  register: tmate_distribution_config
+
+- name: "Tmate | Run Tasks: {{ ansible_distribution }}"
+  ansible.builtin.include_tasks: "{{ ansible_distribution }}.yml"
+  when: tmate_distribution_config.stat.exists

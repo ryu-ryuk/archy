@@ -1,0 +1,31 @@
+---
+- name: "Kitty | Arch | Install kitty"
+  community.general.pacman:
+    name: kitty
+    state: present
+
+- name: "Kitty | Arch | Deploy Kitty Config"
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.config/kitty"
+    mode: "0755"
+    state: directory
+
+- name: "Kitty | Arch | Setting Base Kitty Config"
+  ansible.builtin.set_fact:
+    kitty_config: kitty.conf
+
+- name: "Kitty | Arch | Checking for Distribution Config: {{ ansible_distribution }}"
+  ansible.builtin.stat:
+    path: "{{ role_path }}/files/kitty_{{ ansible_distribution }}.conf"
+  register: kitty_distribution_config
+
+- name: "Kitty | Arch | Found, Setting Kitty Config: kitty_{{ ansible_distribution }}.conf"
+  ansible.builtin.set_fact:
+    kitty_config: "kitty_{{ ansible_distribution }}.conf"
+  when: kitty_distribution_config.stat.exists
+
+- name: "Kitty | Arch | Deploy Kitty Config: {{ kitty_config }}"
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/{{ kitty_config }}"
+    dest: "{{ ansible_user_dir }}/.config/kitty/kitty.conf"
+    mode: "0644"

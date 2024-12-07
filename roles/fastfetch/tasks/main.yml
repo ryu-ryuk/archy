@@ -1,0 +1,36 @@
+---
+- name: "{{ role_name }} | Define distribution mapping"
+  ansible.builtin.set_fact:
+    distribution_mapping:
+      Archlinux: "arch"
+
+- name: "{{ role_name }} | Determine task file"
+  ansible.builtin.set_fact:
+    task_file: "{{ distribution_mapping[ansible_distribution] | default(ansible_distribution) }}.yml"
+
+- name: "{{ role_name }} | Checking for Distribution Config: {{ ansible_distribution }}"
+  ansible.builtin.stat:
+    path: "{{ role_path }}/tasks/{{ ansible_distribution }}.yml"
+  register: distribution_config
+
+- name: "{{ role_name }} | Run Tasks: {{ ansible_distribution }}"
+  ansible.builtin.include_tasks: "{{ ansible_distribution }}.yml"
+  when: distribution_config.stat.exists
+
+- name: "Fastetch | {{ ansible_distribution }} | Ensure .config directory exists"
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/.config/fastfetch"
+    state: directory
+    mode: "0755"
+
+- name: "Fastetch | {{ ansible_distribution }} | Copy config file"
+  ansible.builtin.copy:
+    src: config.jsonc
+    dest: "{{ ansible_user_dir }}/.config/fastfetch/config.jsonc"
+    mode: "0644"
+
+- name: "Fastetch | {{ ansible_distribution }} | Copy config file"
+  ansible.builtin.copy:
+    src: config.conf
+    dest: "{{ ansible_user_dir }}/.config/fastfetch/config.conf"
+    mode: "0644"
