@@ -1,5 +1,20 @@
 # Archy
 
+
+```
+                              $$\                 
+                              $$ |                
+ $$$$$$\   $$$$$$\   $$$$$$$\ $$$$$$$\  $$\   $$\ 
+ \____$$\ $$  __$$\ $$  _____|$$  __$$\ $$ |  $$ |
+ $$$$$$$ |$$ |  \__|$$ /      $$ |  $$ |$$ |  $$ |
+$$  __$$ |$$ |      $$ |      $$ |  $$ |$$ |  $$ |
+\$$$$$$$ |$$ |      \$$$$$$$\ $$ |  $$ |\$$$$$$$ |
+ \_______|\__|       \_______|\__|  \__| \____$$ |
+                                        $$\   $$ |
+                                        \$$$$$$  |
+                                         \______/ 
+```
+
 Archy is a collection of Ansible roles designed specifically for configuring and managing applications and services on **Arch Linux** systems. This repository simplifies the setup of tools and environments by automating common configurations.  
 
 ## Table of Contents
